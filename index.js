@@ -41,7 +41,17 @@ function prova (title, fn) {
   if (command.browser) return;
   if (command.grep && title.indexOf(command.grep) == -1) return skip(title, fn);
   if (isNode) tests.add(title);
-  return tape(title, fn);
+  return tape(title, loggedFn(title, fn));
+}
+
+function loggedFn(title, fn) {
+  return function() {
+    if (console.groupEnd) {
+      console.groupEnd()
+      console.group(title)
+    }
+    fn.apply(this, arguments)
+  }
 }
 
 function skip (title, fn) {
